@@ -9,15 +9,15 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
 
   const [formLoginValues, handleLoginInputChange] = useForm({
-    lEmail: 'ignacio@mail.com',
-    lPassword: '123456',
+    lEmail: '',
+    lPassword: '',
   });
 
   const [formRegisterValues, handleRegisterInputChange] = useForm({
-    rEmail: 'catalina@mail.com',
-    rName: 'Catalina',
-    rPassword1: '123456',
-    rPassword2: '123456',
+    rEmail: '',
+    rName: '',
+    rPassword1: '',
+    rPassword2: '',
   });
 
   const { lEmail, lPassword } = formLoginValues;
@@ -63,7 +63,7 @@ const LoginScreen = () => {
               />
             </div>
             <div className="form-group">
-              <input type="submit" className="btnSubmit" value="Login" />
+              <input type="submit" className="btnSubmit" value="Iniciar sesión" />
             </div>
           </form>
         </div>

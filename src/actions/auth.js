@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import { fetchWithoutToken, fetchWithToken } from '../helpers/fetch';
 import { types } from '../types/types';
+import { eventLogout } from './events';
 
 export const startLogin = (email, password) => {
   return async (dispatch) => {
@@ -52,9 +53,6 @@ export const startChecking = () => {
   return async (dispatch) => {
     const res = await fetchWithToken('auth/renew');
     const body = await res.json();
-
-    console.log(body);
-
     if (body.ok) {
       localStorage.setItem('token', body.token);
       localStorage.setItem('token-init-date', new Date().getTime());
@@ -79,9 +77,10 @@ const login = (user) => ({
 });
 
 export const startLogout = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     localStorage.clear();
-    dispatch(logout());
+    await dispatch(eventLogout());
+    await dispatch(logout());
   };
 };
 

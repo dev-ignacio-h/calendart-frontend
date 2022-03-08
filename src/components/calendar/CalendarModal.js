@@ -7,9 +7,9 @@ import DateTimePicker from 'react-datetime-picker';
 import Swal from 'sweetalert2';
 import { uiCloseModal } from '../../actions/ui';
 import {
-  eventAddNew,
-  eventUpdated,
   eventClearActiveEvent,
+  eventStartAddNew,
+  eventStartUpdate,
 } from '../../actions/events';
 
 const customStyles = {
@@ -66,7 +66,6 @@ const CalendarModal = () => {
       ...formValues,
       start: e,
     });
-    // console.log(e);
   };
 
   const handleEndDateChange = (e) => {
@@ -75,7 +74,6 @@ const CalendarModal = () => {
       ...formValues,
       end: e,
     });
-    // console.log(e);
   };
 
   const handleInputChange = ({ target }) => {
@@ -87,15 +85,10 @@ const CalendarModal = () => {
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    // console.log(formValues);
     const momentStart = moment(start);
     const momentEnd = moment(end);
 
-    // console.log(momentStart)
-    // console.log(momentEnd)
-
     if (momentStart.isSameOrAfter(momentEnd)) {
-      // console.log('Fecha 2 debe ser mayor');
       return Swal.fire(
         'Error',
         'La fecha fin debe ser mayor a la fecha de inicio',
@@ -103,25 +96,11 @@ const CalendarModal = () => {
       );
     }
 
-    if (title.trim().length < 2) {
-      return setTitleValid(false);
-    }
+    if (title.trim().length < 2) return setTitleValid(false);
 
-    if (activeEvent) {
-      dispatch(eventUpdated(formValues));
-    } else {
-      dispatch(
-        eventAddNew({
-          ...formValues,
-          id: new Date().getTime(),
-          user: {
-            _id: '123',
-            name: 'Ignacio',
-          },
-        })
-      );
-    }
-    console.log(formValues);
+    activeEvent
+      ? dispatch(eventStartUpdate(formValues))
+      : dispatch(eventStartAddNew(formValues));
 
     setTitleValid(true);
     closeModal();
