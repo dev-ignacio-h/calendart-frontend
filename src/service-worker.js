@@ -74,27 +74,27 @@ self.addEventListener('message', (event) => {
 self.addEventListener('install', async (event) => {
   console.log(event);
   const cache = await caches.open('cache-1');
-  // await cache.addAll([
-  //   'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css',
-  //   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css',
-  //   '/favicon.ico',
-  // ]);
+  await cache.addAll([
+    'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css',
+    '/favicon.ico',
+  ]);
 });
 
-// self.addEventListener('fetch', (event) => {
-//   // console.log(event.request.url);
-//   if (!event.request.url.includes('/api/auth/renew')) return;
-//   const res = fetch(event.request)
-//     .then((res) => {
-//       // store in cache
-//       caches
-//         .open('cache-dynamic')
-//         .then((cache) => cache.put(event.request, res));
-//       return res.clone();
-//     })
-//     .catch((err) => {
-//       console.log('offline response');
-//       return caches.match(event.request);
-//     });
-//   event.respondWith(res);
-// });
+self.addEventListener('fetch', (event) => {
+  // console.log(event.request.url);
+  if (!event.request.url.includes('/api/auth/renew')) return;
+  const res = fetch(event.request)
+    .then((res) => {
+      // store in cache
+      caches
+        .open('cache-dynamic')
+        .then((cache) => cache.put(event.request, res));
+      return res.clone();
+    })
+    .catch((err) => {
+      console.log('offline response');
+      return caches.match(event.request);
+    });
+  event.respondWith(res);
+});
