@@ -83,18 +83,23 @@ self.addEventListener('install', async (event) => {
 
 self.addEventListener('fetch', (event) => {
   // console.log(event.request.url);
-  if (!event.request.url.includes('/api/auth/renew')) return;
-  const res = fetch(event.request)
-    .then((res) => {
-      // store in cache
-      caches
-        .open('cache-dynamic')
-        .then((cache) => cache.put(event.request, res));
-      return res.clone();
-    })
-    .catch((err) => {
-      console.log('offline response');
-      return caches.match(event.request);
-    });
-  event.respondWith(res);
+  const url = event.request.url;
+  if (url.includes('/api/auth/renew') || url.includes('/api/events')) {
+    const res = fetch(event.request)
+      .then((res) => {
+        // store in cache
+        if (!res) {
+          return caches.match(event.request);
+        }
+        caches
+          .open('cache-dynamic')
+          .then((cache) => cache.put(event.request, res));
+        return res.clone();
+      })
+      .catch((err) => {
+        console.log('offline response');
+        return caches.match(event.request);
+      });
+    event.respondWith(res);
+  }
 });
